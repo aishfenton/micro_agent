@@ -87,7 +87,7 @@ module Micro
   private
 
     def process(parameter)
-      return parameter.value if @already_done[parameter]
+      return parameter.value if @already_done[parameter] || parameter.change_func.nil?
 
       values = [parameter.value]
       parameter.depends_on.each do |p_name|

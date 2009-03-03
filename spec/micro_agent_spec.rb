@@ -20,14 +20,27 @@ describe Micro::World, "with a single agent" do
           p.change_func = lambda do |distance, speed|
             distance + (speed / 1.hour)
           end
+        end,
+        :name => Micro::Parameter.new do |p|
+          p.start_value = "name"
         end
       )
     end
   end
 
+  it "should use the start_value if no change function is given" do
+    @world.callback = lambda do |agent| 
+      agent[:name].should == "name"
+    end
+
+    @world.tick
+    @world.tick
+    @world.tick
+  end
+
   it "should update it's parameters" 
 
-  it "should pass in dependant parameters t"
+  it "should pass in dependant parameters"
 
   it "should call its callback" do
     obj = mock("obj")
