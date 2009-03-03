@@ -6,12 +6,12 @@ Gem::Specification.new do |s|
   s.date = '2009-03-01'
   s.email = "lab-info@visfleet.com"
   s.files = [
-             "lib/markov_agent.rb",
-             "README.txt",
+             "lib/micro_agent.rb",
+             "README.rdoc",
              "spec/micro_agent_spec.rb"
             ]
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README.txt"]
+  s.extra_rdoc_files = ["README.rdoc"]
   s.require_paths = ["lib"]
   s.description = "A simple simulator"
   s.summary = <<-EOF
