@@ -1,4 +1,4 @@
-Micro Agent
+= Micro Agent
     by VisFleet Labs
     http://labs.visfleet.com/micro_agent
 
@@ -19,11 +19,11 @@ can also depend on each other (as long as you don't create a cycle!).
         p.max = 100
         p.min = 0
         p.change_func = lambda { |value| (value + (-10..10).to_a.rand) }
-      end
+      end,
 
       :distance => Agent::Parameter.new do |p|
         p.start_value = 0
-        p.depend_on :speed
+        p.depends_on :speed
         p.change_func = lambda do |distance, speed| 
           distance + (speed / 1.hour)
         end
@@ -49,7 +49,7 @@ Get a callback on each change
 
 == INSTALL:
 
-sudo gem install micro_agent
+  sudo gem install micro_agent
 
 == LICENSE:
 

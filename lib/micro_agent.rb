@@ -2,43 +2,45 @@ require 'eventmachine'
 
 module Micro
 
+  # The world populates  
+  # 
   class World
-
-    attr_accessor :agents
-    
-    def initialize(cycle_delay_seconds, number_of_agents, sender, call_back_method, &proc)
+    attr_accessor :agents, :callback
+  
+    def initialize(cycle_delay_seconds, number_of_agents, callback = nil, &proc)
       @cycle_delay_seconds = cycle_delay_seconds
-      @sender = sender
-      @call_back_method = call_back_method
+      @callback = callback
       @number_of_agents = number_of_agents
       @create_agent_proc = proc
       create_agents
     end
-    
+  
     def create_agents
       @agents = []
       @number_of_agents.times do |i|
         @agents << @create_agent_proc.call(i)
       end
     end
-    
+  
     def start
       EM.run do
         EventMachine::add_periodic_timer( @cycle_delay_seconds ) { tick }
       end
     end
-    
-  private
   
     def tick
       step_agents
-      @sender.send(@call_back_method)
     end
-    
+
+  private
+  
     def step_agents
-      @agents.each { |agent| agent.step }
+      @agents.each do |agent| 
+        agent.step
+        @callback.call(agent) unless @callback.nil?
+      end
     end
-    
+  
   end
 
   # Doesn't support cyclic depends.
@@ -126,7 +128,5 @@ module Micro
     end
     
   end
-  
-
-  
+    
 end

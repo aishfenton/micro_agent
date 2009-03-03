@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.files = [
              "lib/markov_agent.rb",
              "README.txt",
+             "spec/micro_agent_spec.rb"
             ]
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.txt"]
