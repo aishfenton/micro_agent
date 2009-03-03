@@ -27,7 +27,7 @@ describe Micro::World, "with a single agent" do
 
   it "should update it's parameters" 
 
-  it "should pass in dependant parameters"
+  it "should pass in dependant parameters z"
 
   it "should call its callback" do
     obj = mock("obj")
