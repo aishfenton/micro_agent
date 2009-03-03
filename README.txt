@@ -2,7 +2,7 @@ Micro Agent
     by VisFleet Labs
     http://labs.visfleet.com/micro_agent
 
-== DESCRIPTION:
+h2 DESCRIPTION:
   
 A simple simulator. This simulates changes to a collection of agents over a period
 of time.
