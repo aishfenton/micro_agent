@@ -1,3 +1,4 @@
+require "rubygems"
 require 'eventmachine'
 
 module Micro
@@ -7,11 +8,12 @@ module Micro
   class World
     attr_accessor :agents, :callback
   
-    def initialize(cycle_delay_seconds, number_of_agents, callback = nil, &proc)
+    def initialize(cycle_delay_seconds, number_of_agents, percent_per_cycle = 1.0, callback = nil, &proc)
       @cycle_delay_seconds = cycle_delay_seconds
       @callback = callback
       @number_of_agents = number_of_agents
       @create_agent_proc = proc
+      @percent_per_cycle = percent_per_cycle
       create_agents
     end
   
@@ -24,18 +26,13 @@ module Micro
   
     def start
       EM.run do
-        EventMachine::add_periodic_timer( @cycle_delay_seconds ) { tick }
+        EventMachine::add_periodic_timer( @cycle_delay_seconds ) { step_agents }
       end
     end
   
-    def tick
-      step_agents
-    end
-
-  private
-  
     def step_agents
-      @agents.each do |agent| 
+      @agents.each do |agent|
+        next unless rand <= @percent_per_cycle
         agent.step
         @callback.call(agent) unless @callback.nil?
       end
@@ -43,7 +40,21 @@ module Micro
   
   end
 
-  # Doesn't support cyclic depends.
+  # An agent is a autonomous entity that interacts with the Micro::World. Each agent has a collection 
+  # of properties that are updated over time (i.e. with each call to #step_agents in the #World).
+  # 
+  # Dependancy relationships can be setup between an agent's parameters. So that properties:
+  #   a.depends_on b.depends_on c
+  #   d.depends_on b.depends_on c
+  #   b.depends_on c
+  # This is useful where one parameter is required for calculation of another. For example, calculating a 
+  # _speed_ parameter might require you to know the values of the _distance_ and _time_ parameters. #step_agents 
+  # calculates dependancies in the correct order, making that a parameter's dependants are calculated first . 
+  # Note however that cyclic depends_on relationships aren't supported.
+  # 
+  # The runtime complexity of processing dependacies is still O(n) (where n is the number of parameters) even with
+  # complex dependency trees thanks to the niftyness of dynamic programming algorithms.
+  # 
   class MarkovAgent
     attr_accessor :parameters
   
@@ -52,19 +63,9 @@ module Micro
       @already_done = Hash.new
     end
 
-    # Updates the parameter value using the parameter's change 
-    # function. Each parameter is updated with probability equal
-    # to its probability value.
+    # Updates the parameter value using the parameter's change function. Each parameter is updated with
+    # probability equal to its probability value.
     # 
-    # This method also takes care of dependencies between 
-    # parameters. So that.. 
-    #   a.depends_on b.depends_on c
-    #   d.depends_on b.depends_on c
-    #   b.depends_on c
-    # is calculated in the correct order taking all dependencies 
-    # into account.
-    # Note: Runtime complexity is still O(n) even with complex dependency
-    # trees thanks to a nifty dynamic programming algorithm.
     def step(number = 1)
       number.times do
         @already_done.clear
@@ -112,8 +113,35 @@ module Micro
     
   end
   
+  # Represents an individual parameter of an agent. Parameters are updated with each call to #step_world.
+  # See the attributes below for a description of the properties that are possible on each parameter. 
+  # 
   class Parameter
-    attr_accessor :probability, :start_value, :value, :change_func, :depends_on, :max, :min 
+    # The probility that this parameter is updated. Should be between 0.0 and 1.0.
+    attr_accessor :probability
+    
+    # The starting value of this parameter
+    attr_accessor :start_value
+    
+    # Takes a passed in block. The block is used to update this parameter's value. The block is passed the current
+    # value of this parameter and then the value of any dependant parameter's values (in the order they are specified
+    # in the depends_on property). This looks like:
+    #   
+    #   :speed => Micro::Parameter.new do |p|
+    #     p.start_value = 0
+    #     p.depends_on  = :distance, :time
+    #     p.change_func = lambda { |value, distance, time| distance / time }
+    #   end
+    # 
+    attr_accessor :change_func
+
+    # Specifies which parameter's this parameter is dependent on for it's calculations. See #change_func 
+    attr_accessor :depends_on
+
+    # Specifies an upper and lower bound on this parameter's value.  
+    attr_accessor :max, :min 
+    
+    attr_accessor :value, 
 
     def initialize
       @depends_on = []

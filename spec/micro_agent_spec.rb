@@ -33,21 +33,21 @@ describe Micro::World, "with a single agent" do
       agent[:name].should == "name"
     end
 
-    @world.tick
-    @world.tick
-    @world.tick
+    @world.step_agents
+    @world.step_agents
+    @world.step_agents
   end
 
   it "should update it's parameters" 
 
-  it "should pass in dependant parameters"
+  it "should handle dependant parameters"
 
   it "should call its callback" do
     obj = mock("obj")
     @world.callback = lambda { |agent| obj.callback }
 
     obj.should_receive(:callback).once
-    @world.tick
+    @world.step_agents
   end
   
 end
@@ -73,7 +73,9 @@ describe Micro::World, "with many agents" do
     @world.callback = lambda { |agent| obj.callback }
 
     obj.should_receive(:callback).exactly(10)
-    @world.tick
+    @world.step_agents
   end
+  
+  it "should update the passed in percentage of the population each step" 
   
 end

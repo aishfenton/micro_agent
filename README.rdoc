@@ -1,6 +1,7 @@
 = Micro Agent
-    by VisFleet Labs
-    http://labs.visfleet.com/micro_agent
+
+by *VisFleet Labs*
+http://labs.visfleet.com/micro_agent
 
 == DESCRIPTION:
   
@@ -49,7 +50,7 @@ Get a callback on each change
 
 == INSTALL:
 
-  sudo gem install micro_agent
+  sudo gem install visfleet-micro_agent
 
 == LICENSE:
 
