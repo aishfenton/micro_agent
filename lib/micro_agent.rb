@@ -141,7 +141,7 @@ module Micro
     # Specifies an upper and lower bound on this parameter's value.  
     attr_accessor :max, :min 
     
-    attr_accessor :value, 
+    attr_accessor :value 
 
     def initialize
       @depends_on = []
