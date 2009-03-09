@@ -1,6 +1,7 @@
 = Micro Agent
 
-by *VisFleet Labs*
+by <b>VisFleet Labs</b>
+
 http://labs.visfleet.com/micro_agent
 
 == DESCRIPTION:
