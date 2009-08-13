@@ -29,7 +29,7 @@ describe Micro::World, "with a single agent" do
   end
 
   it "should use the start_value if no change function is given" do
-    @world.callback = lambda do |agent| 
+    @world.step_proc = lambda do |agent| 
       agent[:name].should == "name"
     end
 
@@ -42,11 +42,15 @@ describe Micro::World, "with a single agent" do
 
   it "should handle dependant parameters"
 
-  it "should call its callback" do
+  it "should call its callbacks" do
     obj = mock("obj")
-    @world.callback = lambda { |agent| obj.callback }
+    @world.begin_proc = lambda { obj.start }
+    @world.step_proc  = lambda { |agent| obj.during }
+    @world.end_proc   = lambda { obj.end }
 
-    obj.should_receive(:callback).once
+    obj.should_receive(:start).once
+    obj.should_receive(:during).once
+    obj.should_receive(:end).once
     @world.step_agents
   end
   
@@ -68,11 +72,15 @@ describe Micro::World, "with many agents" do
     end
   end
 
-  it "should call its callback for each agend update" do
+  it "should call its callback for each agent update" do
     obj = mock("obj")
-    @world.callback = lambda { |agent| obj.callback }
+    @world.begin_proc = lambda { obj.start }
+    @world.step_proc = lambda { |agent| obj.callback }
+    @world.end_proc   = lambda { obj.end }
 
+    obj.should_receive(:start).once
     obj.should_receive(:callback).exactly(10)
+    obj.should_receive(:end).once
     @world.step_agents
   end
   

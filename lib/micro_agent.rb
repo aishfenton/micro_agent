@@ -6,13 +6,15 @@ module Micro
   # The world populates  
   # 
   class World
-    attr_accessor :agents, :callback
+    attr_accessor :agents, :step_proc, :begin_proc, :end_proc
   
-    def initialize(cycle_delay_seconds, number_of_agents, percent_per_cycle = 1.0, callback = nil, &proc)
+    def initialize(cycle_delay_seconds, number_of_agents, percent_per_cycle = 1.0, step_proc = nil, begin_proc = nil, end_proc = nil, &block)
       @cycle_delay_seconds = cycle_delay_seconds
-      @callback = callback
+      @step_proc = step_proc
+      @begin_proc = begin_proc
+      @end_proc = end_proc
       @number_of_agents = number_of_agents
-      @create_agent_proc = proc
+      @create_agent_proc = block
       @percent_per_cycle = percent_per_cycle
       create_agents
     end
@@ -31,11 +33,13 @@ module Micro
     end
   
     def step_agents
+      @begin_proc.call unless @begin_proc.nil?
       @agents.each do |agent|
         next unless rand <= @percent_per_cycle
         agent.step
-        @callback.call(agent) unless @callback.nil?
+        @step_proc.call(agent) unless @step_proc.nil?
       end
+      @end_proc.call unless @end_proc.nil?
     end
   
   end
