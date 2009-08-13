@@ -13,7 +13,8 @@ Setup the world. Each world is populated with a number of agents. Each agent has
 of properties that change over time. Properties change based on the rules you provide. Properties
 can also depend on each other (as long as you don't create a cycle!).
 
-  @world = Micro::World.new(1, 1, self, :change) do |i|
+  update = lambda { |agent| self.update(agent) }
+  @world = Micro::World.new(1, 1, 1.0) do |i|
     Micro::MarkovAgent.new(
       :speed => Agent::Parameter.new do |p|
         p.start_value = (0..100).to_a.rand

@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "micro_agent"
-  s.version = '0.1.4'
+  s.version = '0.1.5'
   s.authors = ["VisFleet"]
   s.homepage = ["labs.visfleet.com/micro_agent"]
   s.date = '2009-03-01'
