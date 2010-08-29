@@ -1,10 +1,9 @@
-= Micro Agent
+# Micro Agent
+by VisFleet
 
-by <b>VisFleet Labs</b>
+http://www.vworkapp.com
 
-http://labs.visfleet.com/micro_agent
-
-== DESCRIPTION:
+## Overview:
   
 A simple simulator. This simulates changes to a collection of agents over a period
 of time.
@@ -12,49 +11,49 @@ of time.
 Setup the world. Each world is populated with a number of agents. Each agent has a collection
 of properties that change over time. Properties change based on the rules you provide. Properties
 can also depend on each other (as long as you don't create a cycle!).
-
-  update = lambda { |agent| self.update(agent) }
-  @world = Micro::World.new(1, 1, 1.0) do |i|
-    Micro::MarkovAgent.new(
-      :speed => Agent::Parameter.new do |p|
-        p.start_value = (0..100).to_a.rand
-        p.probability = 0.3
-        p.max = 100
-        p.min = 0
-        p.change_func = lambda { |value| (value + (-10..10).to_a.rand) }
-      end,
-
-      :distance => Agent::Parameter.new do |p|
-        p.start_value = 0
-        p.depends_on :speed
-        p.change_func = lambda do |distance, speed| 
-          distance + (speed / 1.hour)
+   
+    update = lambda { |agent| self.update(agent) }
+    @world = Micro::World.new(1, 1, 1.0) do |i|
+      Micro::MarkovAgent.new(
+        :speed => Agent::Parameter.new do |p|
+          p.start_value = (0..100).to_a.rand
+          p.probability = 0.3
+          p.max = 100
+          p.min = 0
+          p.change_func = lambda { |value| (value + (-10..10).to_a.rand) }
+        end,
+   
+        :distance => Agent::Parameter.new do |p|
+          p.start_value = 0
+          p.depends_on :speed
+          p.change_func = lambda do |distance, speed| 
+            distance + (speed / 1.hour)
+          end
         end
-      end
-    )
-  end
+      )
+    end
 
 Set the world in motion.  
 
-  @world.start
+    @world.start
 
 Get a callback on each change
 
-  def change
-    @world.agents.each do |agent|
-      pp agent
+    def change
+      @world.agents.each do |agent|
+        pp agent
+      end
     end
-  end
 
-== Dependancies
-
-- eventmachine (http://rubyeventmachine.com/)
-
-== INSTALL:
+## Install:
 
   sudo gem install visfleet-micro_agent
 
-== LICENSE:
+### Dependancies
+
+- eventmachine (http://rubyeventmachine.com/)
+
+## LICENSE:
 
 (The MIT License)
 

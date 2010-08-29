@@ -31,6 +31,10 @@ module Micro
         EventMachine::add_periodic_timer( @cycle_delay_seconds ) { step_agents }
       end
     end
+
+    def stop
+      EM.stop
+    end
   
     def step_agents
       @begin_proc.call unless @begin_proc.nil?

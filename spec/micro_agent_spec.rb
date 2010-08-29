@@ -38,6 +38,11 @@ describe Micro::World, "with a single agent" do
     @world.step_agents
   end
 
+  it "should stop when asked to" do
+    @world.step_proc  = lambda { |agent|  @world.stop }
+    @world.start
+  end 
+
   it "should update it's parameters" 
 
   it "should handle dependant parameters"
