@@ -2,12 +2,13 @@ Gem::Specification.new do |s|
   s.name = "micro_agent"
   s.version = '0.1.6'
   s.authors = ["VisFleet"]
-  s.homepage = ["www.vworkapp.com"]
+  s.homepage = "http://www.vworkapp.com"
   s.date = '2009-03-01'
   s.email = "aisha.fenton@visfleet.com"
   s.files = [
+             "examples/drivers.rb",
              "lib/micro_agent.rb",
-             "README.rdoc",
+             "README.md",
              "spec/micro_agent_spec.rb"
             ]
   s.has_rdoc = true
