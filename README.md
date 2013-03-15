@@ -1,7 +1,4 @@
 # Micro Agent
-by VisFleet
-
-http://www.vworkapp.com
 
 ## Overview:
   
